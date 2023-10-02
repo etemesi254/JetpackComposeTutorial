@@ -36,7 +36,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,11 +43,12 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
@@ -94,6 +94,20 @@ fun SimpleOutlinedTextFieldSample(message: SnapshotStateList<Message>) {
     }
 }
 
+@Composable
+fun addDeleteButton(messages: SnapshotStateList<Message>, message: Message) {
+
+    Icon(
+        Icons.Rounded.Delete,
+        modifier = Modifier.height(20.dp).clickable {
+            messages.remove(message)
+        },
+        contentDescription = "Delete Chat",
+        tint= Color(200,0,0,0xFF)
+    )
+}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -116,7 +130,7 @@ fun Conversation(messages: SnapshotStateList<Message>) {
 
                 items(messages) { message ->
                     if (message.author.direction == Direction.Left)
-                        LeftMessageCard(message) else RightMessageCard(message)
+                        LeftMessageCard(message,messages) else RightMessageCard(message,messages)
                 }
             }
         },
@@ -139,7 +153,7 @@ class MainActivity : ComponentActivity() {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun LeftMessageCard(msg: Message) {
+fun LeftMessageCard(msg: Message, messages: SnapshotStateList<Message>) {
     val configuration = LocalConfiguration.current
 
     // We keep track if the message is expanded or not in this
@@ -207,6 +221,10 @@ fun LeftMessageCard(msg: Message) {
                     }
 
                 }
+            }
+
+            Box(modifier = Modifier.align(Alignment.CenterVertically)) {
+                addDeleteButton(messages = messages, message = msg)
             }
         }
     }
@@ -276,7 +294,7 @@ fun formatDateAndTime(timeString: String) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun RightMessageCard(msg: Message) {
+fun RightMessageCard(msg: Message,messages: SnapshotStateList<Message>) {
     // We keep track if the message is expanded or not in this
     // variable
     var isExpanded by remember { mutableStateOf(false) }
@@ -303,6 +321,9 @@ fun RightMessageCard(msg: Message) {
 
     ) {
         Row() {
+
+            addDeleteButton(messages = messages, message = msg)
+
 
             Surface(
                 shape = MaterialTheme.shapes.medium,

@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.jetpackcompoetutorial"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.jetpackcompoetutorial"
@@ -59,6 +59,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material:1.5.2")
+
 
     // image dependency
     implementation("io.coil-kt:coil-compose:2.0.0-rc01")
